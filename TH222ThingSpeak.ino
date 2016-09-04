@@ -27,6 +27,7 @@ ESP8266WebServer server(80);
 // Temperature Humidity Channel
 static unsigned long myChannelNumber = 123456;
 static const char 	*myWriteAPIKey = "XXXXXXXXXXXXXXXX";
+static WiFiClient  client;
 
 /*============ End ThingSpeak setup ==============*/
 
@@ -94,13 +95,15 @@ void handleRoot()
 	String wstr = 
 	"<p>Hello from the weather esp8266, read from /temp or /humidity"
 	"<br>set <a href=/set?minuteSampleInterval=5>5 minute</a> sample interval"
-	", <a href=/set?nextSampleMinute=5>sample at 15 </a> minute"
-	"<br><a href=/sample>Sample Data</a>"
+	", <a href=/set?nextSampleMinute=15>sample at 15 </a> minute"
+	"<br>Take <a href=/sample>sample Data</a> and upload to ThingSpeak"
 	"<br><a href=/temp>Get Temperature</a>"
 	"<br><a href=/humidity>Get Humidity</a>";
 	wstr += "<br>Last temperature: " + String(lastTempF)+"F";
 	wstr += " humidity: " + String(lastHumdty)+"%";
-	wstr += "<br>Next sample time: " + String(nextSampleMinute)+"minute";
+	wstr += "<br>Current minute: " + String(minute(now()));
+	wstr += " next sample time: " + String(nextSampleMinute)+" min.";
+	wstr += " sample interval: " + String(minuteSampleInterval)+" min.";
 	server.send(200,HTML_TYPE, wstr);
 	delay(100);
 }
@@ -109,7 +112,7 @@ void doSample()
 	Serial.println("DoSample");
 	getTemperature();
 	int rc = uploadData();
-	String wstr = "<p>Sample data:  ";
+	String wstr = "<p>Take sample data:  ";
 	wstr += "<br>Temperature " + String(lastTempF);
 	wstr += "<br>Humidity " + String(lastHumdty);
 	wstr += "<br>Upload thingspeak rc=" + String(rc);
@@ -164,6 +167,7 @@ static WebServiceDef wsd[] = {
 				if (v)
 					nextSampleMinute = v;
 			}
+			server.send(200, "text/plain", "ok");
 		}
 	},
  	{0,0}
@@ -208,6 +212,8 @@ void setup(void)
 	Serial.println(ssid);
 	Serial.print("IP address: ");
 	Serial.println(WiFi.localIP());
+
+	ThingSpeak.begin(client);
 
 	setupServerHandler();
 

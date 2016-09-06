@@ -4,6 +4,6 @@ Edit code, change it to match your WiFi SSID and password.  Also set your ThingS
 Requirements:
 - Arduino 1.65+
 - ESP8266 board manager
-- Time library http://playground.arduino.cc/Code/Time
+- Time library https://github.com/PaulStoffregen/Time (http://playground.arduino.cc/Code/Time)
 - DH22 basic sensor library from AdaFruit https://github.com/adafruit/DHT-sensor-library
 

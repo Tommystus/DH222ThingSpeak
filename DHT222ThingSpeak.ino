@@ -1,6 +1,7 @@
 /* DHTServer - ESP8266 Webserver with a DHT sensor as an input
 
    Based on ESP8266Webserver, DHTexample, and BlinkWithoutDelay (thank you)
+   also examples from ESP8266WebServer, ThingSpeak and Time libraries
 
    Version 1.0  5/3/2014  Version 1.0   Mike Barela for Adafruit Industries
 */
